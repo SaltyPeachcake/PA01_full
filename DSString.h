@@ -8,6 +8,7 @@
 #include <iostream>
 #include <cstring>
 
+
 class DSString{
 
 private:
@@ -30,6 +31,11 @@ private:
      **/
 
 
+
+     char* customString;
+     short sLength; // length of the string given. Since each string will only have max of 148 chars we can use type short
+     //I know that the length isnt needed in the field, but I like having it cause easy to reference
+
 public:
 
     /**
@@ -37,14 +43,22 @@ public:
      *
      * Make sure you do proper memory management.
      **/
-    DSString();
-    DSString(const char*);
-    DSString(const DSString&);
-    ~DSString();
+
+    //What is this? is it complete? what is it even doing?
+    //DSString() : maxL(nullptr), size(0) // default constructor
+
+    DSString(); //Default constructor
+    DSString(const char*); // Takes the c-string and creates a DSString object
+    DSString(const DSString&); //Copies? kinda confused by this one
+    ~DSString(); //Destructor, deletes object
+
+
+
 
     /**
      * Overloaded Assignment Operators
      */
+
     DSString& operator= (const char*);
     DSString& operator= (const DSString&);
 
@@ -67,6 +81,8 @@ public:
     bool operator== (const DSString&);
     bool operator> (const DSString&);
     bool operator> (const char*);
+    bool operator< (const DSString&);
+    bool operator< (const char*);
 
     /**
      * Subscript operator to access a particular character of a DSString object
@@ -77,7 +93,7 @@ public:
     /**
      * getLength() returns the number (count) of characters in the string.
      **/
-    int getLength();
+    int getLength(); //must remove one char from end to get rid of null char
 
     /**
      * The substring method returns a string object that contains a
@@ -109,6 +125,9 @@ public:
     //Further - you will be able to update and modify this class as the
     //semester progresses.
 
+    DSString find(DSString str); //will find string within a string
+
+    char* charAt(int location); //finds char at specified place
 };
 
 
