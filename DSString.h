@@ -50,6 +50,7 @@ public:
     DSString(); //Default constructor
     DSString(const char*); // Takes the c-string and creates a DSString object
     DSString(const DSString&); //Copies? kinda confused by this one
+    DSString(const char); //needed this to test out more things
     ~DSString(); //Destructor, deletes object
 
 
@@ -61,12 +62,16 @@ public:
 
     DSString& operator= (const char*);
     DSString& operator= (const DSString&);
+    DSString& operator= (const char);
 
     /**
      * Overloaded non-modifying string concat
      * @return
      */
     DSString operator+ (const DSString&);
+
+    DSString& operator+= (const DSString&);
+    DSString& operator+= (const char);
 
     /**
      * Standard relational operators.  Feel free to add additional.
@@ -77,12 +82,14 @@ public:
      *
      **/
 
-    bool operator== (const char*);
-    bool operator== (const DSString&);
-    bool operator> (const DSString&);
-    bool operator> (const char*);
-    bool operator< (const DSString&);
-    bool operator< (const char*);
+    bool operator== (const char*) const;
+    bool operator== (const DSString&) const;
+    bool operator!= (const DSString&) const;
+    bool operator!= (const char*) const;
+    bool operator> (const DSString&) const;
+    bool operator> (const char*) const;
+    bool operator< (const DSString&) const;
+    bool operator< (const char*) const;
 
     /**
      * Subscript operator to access a particular character of a DSString object
@@ -125,9 +132,13 @@ public:
     //Further - you will be able to update and modify this class as the
     //semester progresses.
 
-    DSString find(DSString str); //will find string within a string
+   // DSString find(DSString str); //will find string within a string
 
-    char* charAt(int location); //finds char at specified place
+   std::istream & getLine (std::istream &ist, DSString &str, //got this from stack overflow
+                                  char delim = '\n');
+
+
+
 };
 
 

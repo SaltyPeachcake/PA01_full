@@ -1,19 +1,20 @@
+#define CATCH_CONFIG_RUNNER
+#include "catch.hpp"
 #include <iostream>
 #include "DSString.h"
-int main() {
-    std::cout << "Hello, World!" << std::endl;
+#include "fileReader.h"
 
-    DSString str01;
-    DSString str02, str03;
+int main(int argc, char** argv) {
 
-    str03 = str01 + str02;
-    str03.operator=(str01.operator+(str02));
+    //std::ifstream testFile (argv[1]); //pretty sure this opens the file?
+   fileReader::readFile(argv[1]);
 
-    str03.getLength();
 
-    DSString* str01ptr = &str01;
-    str01ptr->getLength();
-    (*str01ptr).getLength();
 
+    //Catch::Session().run(); //just temporary
+    return 0;
+}
+int test(){
+    Catch::Session().run();
     return 0;
 }
