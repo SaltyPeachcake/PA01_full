@@ -84,4 +84,14 @@ TEST_CASE("DSStrings are working as they should", "[DSString]")
         REQUIRE((std::strcmp(nice.c_str(), "I like boobs")==0));
         REQUIRE(nice[nice.getLength()] == '\0');
     }
+    SECTION("Can be converted to an int"){
+        DSString part("1984633622");
+        DSString whole("Whats good 29");
+        char single = '5';
+        int n = DSString::toInt(part);
+        int num = single - '0';
+        REQUIRE(n == 1984633622);
+        REQUIRE(num ==5);
+
+    }
 }

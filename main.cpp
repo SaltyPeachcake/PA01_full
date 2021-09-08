@@ -7,7 +7,9 @@
 int main(int argc, char** argv) {
 
     //std::ifstream testFile (argv[1]); //pretty sure this opens the file?
-   fileReader::readFile(argv[1]);
+
+   //fileReader::readTestTweets(argv[1]);
+   fileReader::readTestSentiment(argv[2]);
 
 
 

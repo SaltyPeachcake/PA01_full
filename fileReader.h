@@ -13,10 +13,12 @@
 class fileReader {
 
 public:
-    std::map<int, DSString> tweetMap;
+    static std::map<int, std::pair<DSString, int>> tweetMap; // map of ID and pair of tweet with sentiment
 
 
-    static void readFile(const char*);
+    static void readTestTweets(const char*);
+
+    static void readTestSentiment(const char*);
 
 };
 

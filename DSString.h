@@ -137,6 +137,8 @@ public:
    std::istream & getLine (std::istream &ist, DSString &str, //got this from stack overflow
                                   char delim = '\n');
 
+   static int toInt(DSString&);
+
 
 
 };

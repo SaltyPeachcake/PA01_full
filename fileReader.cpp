@@ -7,20 +7,21 @@
 #include <iostream>
 #include <fstream> //needed to not throw error on file declaration
 #include <vector>
+#include <map>
 
-void fileReader::readFile(const char* inputFileName){
+void fileReader::readTestTweets(const char* inputFileName){
 
     std::ifstream inFile;
     inFile.open(inputFileName,std::ios::in); // do I need the ios::in?
 
     std::vector<DSString> row; //creates empty vector for each line in csv
-    char line[3000];
-    if(inFile.is_open()) inFile.getline(line, 3000); //clears first line of col names
+    char line[600];
+    if(inFile.is_open()) inFile.getline(line, 600); //clears first line of col names
     if ( inFile.is_open() ) {
         int tCount =0;
         while ( inFile && (tCount<=10)){
             row.clear();
-            inFile.getline(line,3000);
+            inFile.getline(line,600);
 
             DSString wholeLine(line); //converts line to one DSString
             int i = 0;
@@ -46,9 +47,11 @@ void fileReader::readFile(const char* inputFileName){
                 }
                 i++;
             }
-
-            std::cout << "ID: " << row[0] << " : \n";
-            std::cout << "Tweet: " << row[1] << "\n";
+            int n = DSString::toInt(row[0]);
+            //inserting the values to the map produces errors
+            //tweetMap.insert(std::make_pair(n, std::make_pair(row[1],2))); //creates a new key value pair, sets sentiment to 2 until other file is read
+            //std::cout << "ID: " << row[0] << " : \n";
+            //std::cout << "Tweet: " << row[1] << "\n";
             tCount++;
             //Do I need to break each word apart?
 
@@ -56,3 +59,22 @@ void fileReader::readFile(const char* inputFileName){
         inFile.close();
     }
 }
+
+void fileReader::readTestSentiment(const char * inputFileName){ //I am just going to assume that each tweet sentiment is the same index as in the tweet dataset
+    std::ifstream inFile;
+    inFile.open(inputFileName,std::ios::in); // do I need the ios::in?
+
+    char line[20];
+    int sent;
+    if(inFile.is_open()) inFile.getline(line, 20); //clears first line of col names
+    if ( inFile.is_open() ) {
+        int tCount =0;
+        while ( inFile && (tCount<=10)){
+            inFile.getline(line,20);
+            sent = line[0]-'0';
+            std::cout << "Sent: " << sent << "\n";
+            tCount++;
+        }
+    }
+}
+

@@ -5,6 +5,7 @@
 
 #include "DSString.h"
 #include <cstring>
+#include <stdlib.h>
 
 /**
  * The constructors
@@ -72,8 +73,7 @@ DSString DSString::operator+ (const DSString& arg){
     std::strcpy(temp,customString); //copies original string to one that is longer
     //also I feel like when concatenating I will want to add a space at the end of the first string so they don't mesh
     std::strcat(temp, arg.customString); //what happens to the arg? does it stay there? Should I delete it?
-    DSString concat(temp);
-    delete[] temp;
+    DSString concat(temp); // so I dont need to delete temp[]?
     return concat;
 }
 /**
@@ -86,9 +86,11 @@ DSString& DSString::operator+= (const DSString& arg){
     std::strcpy(temp,customString);
     std::strcat(temp, arg.customString);
     delete[] customString;
+    customString = temp;
+    /**
     customString = new char[newLength+1];
     std::strcpy(customString, temp);
-    delete[] temp;
+    delete[] temp;**/
     return *this;
 }
 
@@ -203,4 +205,9 @@ std::istream &DSString::getLine(std::istream &inStream, DSString &line, char del
     }
 
 
+}
+
+int DSString::toInt(DSString & arg) {
+    //int num = arg.c_str() - 0; //this is a way to convert one character to an int
+    return  atoi(arg.c_str());
 }
