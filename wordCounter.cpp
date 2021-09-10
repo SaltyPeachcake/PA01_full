@@ -19,6 +19,8 @@ void wordCounter::printMaps(std::map<DSString, int>& pos,  std::map<DSString, in
         std::cout<< itNeg->first << " COUNT: " << itNeg->second << "\n";
         itNeg++;
     }
+    std::cout<< "Total negative words: " << negWordCount << " Total tweets: "<<neg1<<"\n";
+    std::cout<< "Total positive words: " << posWordCount <<" Total tweets: "<<pos1<< std::endl;
 }
 
 void wordCounter::countWords2(std::vector<std::pair<int, DSString>>& tweets) {
@@ -30,10 +32,11 @@ void wordCounter::countWords2(std::vector<std::pair<int, DSString>>& tweets) {
         int size = 0;
 
         DSString* words = tweet.getWords(size);
-        if(sent==0){ //negative words //once it gets to this point the program bacially stops. Maybe infinite loop?
+        if(sent==0){ //negative words
             //std::cout<<"Sentiment: "<<sent<<" Tweet: "<<tweet<<"\n";
-            for(int i=0; i<size;i++){ // odd error i guess
-
+            negWordCount += size;
+            neg1++;
+            for(int i=0; i<size;i++){
                 auto negIT = negativeWords.find(words[i]); //looks for the word
                 if ( negIT != negativeWords.end() ) { //word is found
                     negIT->second++; // will this work correctly?
@@ -44,6 +47,8 @@ void wordCounter::countWords2(std::vector<std::pair<int, DSString>>& tweets) {
         }
         if(sent==4){ //positive words
             //std::cout<<"Sentiment: "<<sent<<" Tweet: "<<tweet<<"\n";
+            posWordCount += size;
+            pos1++;
             for(int i=0; i<size;i++){
                 auto posIT = positiveWords.find(words[i]);
                 if ( posIT != positiveWords.end() ) { //word is found
@@ -55,3 +60,17 @@ void wordCounter::countWords2(std::vector<std::pair<int, DSString>>& tweets) {
         }
     }
 }
+
+
+
+void wordCounter::modifyWordLists(std::map<DSString, int> & positive, std::map<DSString, int>& negative){
+
+}
+
+void wordCounter::determineSentiment(std::vector<std::pair<int, DSString>> & tweets) {
+    for( auto it = begin(tweets); it != end (tweets); ++it ){
+
+    }
+
+}
+
