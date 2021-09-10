@@ -46,15 +46,15 @@ TEST_CASE("DSStrings are working as they should", "[DSString]")
         DSString a("This is a test");
         DSString b("This one is different");
         DSString c("This is a test");
-        DSString d ("I have no clue what this is but its kinda long for to make sure that its longer than b");
-        REQUIRE (a == c);
+        DSString d ("A have no clue what this is but its kinda long for to make sure that its longer than b");
+        REQUIRE ((a == c) == true);
         REQUIRE (a != b);
         REQUIRE (std::strcmp(a.c_str(), c.c_str())==0);
        // REQUIRE (a.c_str()==c.c_str()); // this fails? or doesn't call the right overload operator
 
         REQUIRE (b > a);
         //REQUIRE (b < d); //what? why does this fail its literally over twice as long
-        REQUIRE (c.c_str()<d.c_str()); // Okay I ran the test once and this failed, then started working again
+        REQUIRE (c.c_str()>d.c_str()); // Okay I ran the test once and this failed, then started working again
     }
     SECTION("Can get certain char in DSString"){
         DSString a("What are you gonna do, stab me?");
@@ -86,12 +86,27 @@ TEST_CASE("DSStrings are working as they should", "[DSString]")
     }
     SECTION("Can be converted to an int"){
         DSString part("1984633622");
-        DSString whole("Whats good 29");
+        DSString whole("2243873058"); // was running into issue with this being above int limit, had to convert to long
         char single = '5';
-        int n = DSString::toInt(part);
+        long n = part.toInt();
+        long m = whole.toInt();
         int num = single - '0';
         REQUIRE(n == 1984633622);
-        REQUIRE(num ==5);
+        REQUIRE(num == 5);
+        REQUIRE(m == 2243873058);
 
+    }
+    SECTION("DSString sentence can be broken into words"){
+        DSString sentence("I am a test of willpower and pain tolerance");
+        int size = 0;
+        DSString* words = sentence.getWords(size);
+        REQUIRE(words[0]=="I");
+        REQUIRE(words[1]=="am");
+        REQUIRE(words[2]=="a");
+        REQUIRE(words[3]=="test");
+        REQUIRE(words[4]=="of");
+        REQUIRE(words[5]=="willpower");
+        REQUIRE(words[8]=="tolerance");
+        REQUIRE(size==0);
     }
 }

@@ -8,17 +8,23 @@
 #include "DSString.h"
 #include <map>
 #include <iostream>
-
+#include <vector>
 
 class fileReader {
 
 public:
-    static std::map<int, std::pair<DSString, int>> tweetMap; // map of ID and pair of tweet with sentiment
+    std::map<long, std::pair<DSString, int>> tweetMap; // map of ID and pair of tweet with sentiment
+    std::map<int, DSString> trainingTweets;
+    std::vector<int> sentVal;
+    std::vector<std::pair<int, DSString>> trainingTweetsVec;
 
+    // I have not actually read the initial map after creation, perhaps that will help debug?
 
-    static void readTestTweets(const char*);
+    void readTestTweets(const char*); // have to re do this to do only tweets lol
 
-    static void readTestSentiment(const char*);
+    void readTestSentiment(const char*);
+
+    void readTrainingData(const char*);
 
 };
 

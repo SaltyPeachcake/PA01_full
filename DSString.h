@@ -137,7 +137,9 @@ public:
    std::istream & getLine (std::istream &ist, DSString &str, //got this from stack overflow
                                   char delim = '\n');
 
-   static int toInt(DSString&);
+   long toInt();
+
+   DSString* getWords(int& ); //I believe this is returning a container for all the words in the string.
 
 
 

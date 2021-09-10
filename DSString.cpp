@@ -207,7 +207,35 @@ std::istream &DSString::getLine(std::istream &inStream, DSString &line, char del
 
 }
 
-int DSString::toInt(DSString & arg) {
+long DSString::toInt() {
     //int num = arg.c_str() - 0; //this is a way to convert one character to an int
-    return  atoi(arg.c_str());
+    return  atol(this->c_str());
+}
+
+DSString* DSString::getWords(int& s) { //improve efficiency by making the index of spaces kept track up originally
+
+    char* string = this->c_str();
+    int spaces = 0;
+    for(int i = 0; i<this->getLength();i++){
+        if(string[i] == ' '){
+            spaces++;
+        }
+    }
+    s = spaces;
+    auto* words = new DSString[spaces+1]; //creates new DSString array or whatever of each word. Words is how many spaces+1
+    int spaces2 = 0;
+    int mark = 0;
+    for(int i = 0; i<this->getLength();i++){
+        if(string[i] == ' '){
+            DSString word(this->substring(mark, i-mark));
+           mark = i+1;
+           words[spaces2] = word;
+           spaces2++;
+        }
+        if(spaces2==spaces){ //only occurs at the last space
+            DSString word(this->substring(mark, this->getLength()-(mark-1)));
+            words[spaces2] = word;
+        }
+    }
+    return words;
 }
