@@ -95,14 +95,14 @@ void wordCounter::determineWordWeights(std::map<DSString, int> & pos, std::map<D
         auto negIT = neg.find(key);
         if ( negIT != neg.end() ) { // sees if word occurs in both lists
 
-            float posWeight = (totalPosTweets * it->second)/(posWordCount/10); // the weight rounded to 2 decimals
-            float negWeight = (totalNegTweets * negIT->second)/(negWordCount/10);
+            float posWeight = round((float(totalPosTweets) * float(it->second))/(float(posWordCount)/10)); // the weight rounded to 2 decimals
+            float negWeight = round((float(totalNegTweets) * float(negIT->second))/(float(negWordCount)/10));
             wordWeight = posWeight - negWeight;
 
             wordWeights.insert(std::pair(key,wordWeight));
 
         } else { //word is not found
-            wordWeight = (totalPosTweets * it->second)/(posWordCount/10);
+            wordWeight = round((float(totalPosTweets) * float(it->second))/(float(posWordCount)/10));
             wordWeights.insert(std::pair(key,wordWeight));
         }
 
@@ -115,11 +115,11 @@ void wordCounter::determineWordWeights(std::map<DSString, int> & pos, std::map<D
         if ( wIT != wordWeights.end() ) { // word does occur in both lists. Checking this first cause faster if true
             // nothing happens
         } else { //word is not found
-            wordWeight = 0.0 - (totalNegTweets * it->second)/(negWordCount /10); // 0- to make weight neg
+            wordWeight = 0.0 - round((float(totalNegTweets) * float(it->second))/(float(negWordCount) /10.0)); // 0- to make weight neg
             wordWeights.insert(std::pair(key,wordWeight));
         }
     }
-
+    //delete positiveWords;
 }
 
 void wordCounter::determineSentiment(std::map<DSString, DSString>& tweets){ // takes proccessed test tweets
@@ -145,25 +145,13 @@ void wordCounter::determineSentiment(std::map<DSString, DSString>& tweets){ // t
 
     }
 }
-
-void wordCounter::testItAll(std::map<DSString, int> & myData, std::map<DSString, int> & actualData, int& totalTested) {
-    int correct = 0;
-    for( auto it = begin(myData); it != end (myData); ++it ){ //could probably store both arguments as vector then compare index to save time if needed
-
-        DSString key = it->first;
-
-        auto testIT = actualData.find(key);
-        if ( testIT != actualData.end() ) {
-            if(it->second == testIT->second){ // I somehow get the right prediction
-                correct++;
-            } else incorrectTweetIDs.emplace_back(it->first);
-        } else { //can I just remove this?
-        }
-    }
-    float accuracy = correct / totalTested; // I feel like getting the total tweets this way will not return correct value
-    std::cout<< accuracy<<std::endl;
+/**
+ * rounds the float to two decimals just so it doesnt get too messy
+ */
+float wordCounter::round(float var){
+    float value = (int)(var * 100 + .5);
+    return (float)value / 100;
 }
-
 
 
 

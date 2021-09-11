@@ -8,7 +8,7 @@
 int main(int argc, char** argv) {
 
     fileReader newfileReader;
-    newfileReader.readTrainingData(argv[3]);
+    newfileReader.readTrainingData(argv[1]);
 
 
     wordCounter newWordCounter;
@@ -20,15 +20,13 @@ int main(int argc, char** argv) {
     newWordCounter.negativeWords.clear(); //clearing these to try to free up memory.
     //newWordCounter.printMaps(newWordCounter.wordWeights);
 
-    newfileReader.readTestSentiment(argv[2]);
-    newfileReader.readTestTweets(argv[1]);
+    newfileReader.readTestSentiment(argv[3]);
+    newfileReader.readTestTweets(argv[2]);
 
     newWordCounter.determineSentiment(newfileReader.testTweetsProcessed);
 
-
-
     produceResults final;
-    final.testItAll(newWordCounter.classifiedTweets, newfileReader.testSent, newfileReader.totalTestTweets);
+    final.testItAll(newWordCounter.classifiedTweets, newfileReader.testSent, newfileReader.totalTestTweets, argv[4]);
 
     //Catch::Session().run(); //just temporary
 

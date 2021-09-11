@@ -38,7 +38,7 @@ public:
 
     void determineSentiment(std::map<DSString, DSString>&);
 
-    void testItAll(std::map<DSString, int>&, std::map<DSString, int>&, int&);
+    float round(float var);
 
     /**
      * Possibly look at the precentages of both? If words occur above x% in both lists then declare it a modifer word,

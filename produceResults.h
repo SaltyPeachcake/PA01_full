@@ -15,7 +15,10 @@ class produceResults {
 public:
     std::vector<DSString> incorrectTweetIDs;
 
-   void testItAll(std::map<DSString, int> & myData, std::map<DSString, int> & actualData, int& totalTested);
+
+    void testItAll(std::map<DSString, int> & myData, std::map<DSString, int> & actualData, int& totalTested,const char* );
+
+   void writeToFile(const char*, float);
 };
 
 

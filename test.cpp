@@ -9,10 +9,8 @@ TEST_CASE("DSStrings are working as they should", "[DSString]")
     SECTION("DSStrings can be created created with different parameters" ) {
         DSString emp;
         REQUIRE(emp.c_str() == nullptr);
-        //I was gonna try to delete emp, but apparently it is deleted automatically?
 
         DSString charstar("This is a test");
-        //REQUIRE(charstar.c_str() == "This is a test");
         REQUIRE(std::strcmp(charstar.c_str(), "This is a test") == 0); // I'm gonna try comparing this way instead for a sec
         REQUIRE(charstar.getLength() == std::strlen("This is a test"));
         REQUIRE(charstar[charstar.getLength()] == '\0'); // makes sure that the last value is a null character
@@ -39,7 +37,6 @@ TEST_CASE("DSStrings are working as they should", "[DSString]")
         DSString a("I was born into a world with pain,");
         DSString b(" but I clawed my way into one of false security");
         DSString c = a + b;
-        //REQUIRE( a.c_str() == "I was born into a world with pain, but I clawed my way into one of false security");
         REQUIRE(std::strcmp(c.c_str(), "I was born into a world with pain, but I clawed my way into one of false security") == 0);
     }
     SECTION("DSString relational operators working"){
@@ -59,7 +56,7 @@ TEST_CASE("DSStrings are working as they should", "[DSString]")
     SECTION("Can get certain char in DSString"){
         DSString a("What are you gonna do, stab me?");
         char let = a[5];
-        REQUIRE(let== 'a'); //I think this is testing it right?
+        REQUIRE(let== 'a');
     }
     SECTION("getLength() works okay. Yay"){
         DSString a("*He stabs him*");
@@ -84,7 +81,7 @@ TEST_CASE("DSStrings are working as they should", "[DSString]")
         REQUIRE((std::strcmp(nice.c_str(), "I like boobs")==0));
         REQUIRE(nice[nice.getLength()] == '\0');
     }
-    SECTION("Can be converted to an int"){
+    SECTION("Can be converted to an long"){
         DSString part("1984633622");
         DSString whole("2243873058"); // was running into issue with this being above int limit, had to convert to long
         char single = '5';
