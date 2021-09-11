@@ -3,6 +3,7 @@
 //
 
 #include "wordCounter.h"
+#include "fileReader.h"
 #include<map>
 #include <vector>
 
@@ -19,8 +20,16 @@ void wordCounter::printMaps(std::map<DSString, int>& pos,  std::map<DSString, in
         std::cout<< itNeg->first << " COUNT: " << itNeg->second << "\n";
         itNeg++;
     }
-    std::cout<< "Total negative words: " << negWordCount << " Total tweets: "<<neg1<<"\n";
-    std::cout<< "Total positive words: " << posWordCount <<" Total tweets: "<<pos1<< std::endl;
+    std::cout<< "Total negative words: " << negWordCount << " Total tweets: "<<totalNegTweets<<"\n";
+    std::cout<< "Total positive words: " << posWordCount <<" Total tweets: "<<totalPosTweets<< std::endl;
+}
+void wordCounter::printMaps(std::map<DSString, float> & weights) const {
+    auto it = weights.begin();
+    std::cout<<"Word Weights: \n";
+    while(it!=weights.end()){
+        std::cout<< it->first << " WEIGHT: " << it->second << "\n";
+        it++; //need to update iterator every time
+    }
 }
 
 void wordCounter::countWords2(std::vector<std::pair<int, DSString>>& tweets) {
@@ -31,33 +40,43 @@ void wordCounter::countWords2(std::vector<std::pair<int, DSString>>& tweets) {
         //std::cout<<"Sentiment: "<<sent<<" Tweet: "<<tweet<<"\n";
         int size = 0;
 
+        //std::map<DSString, int> posW;
+        //std::map<DSString, int> negW;
+
         DSString* words = tweet.getWords(size);
-        if(sent==0){ //negative words
-            //std::cout<<"Sentiment: "<<sent<<" Tweet: "<<tweet<<"\n";
+        if(sent==0){
             negWordCount += size;
-            neg1++;
-            for(int i=0; i<size;i++){
-                auto negIT = negativeWords.find(words[i]); //looks for the word
-                if ( negIT != negativeWords.end() ) { //word is found
-                    negIT->second++; // will this work correctly?
-                } else { //word is not found
-                    negativeWords.insert(std::pair(words[i],1));
-                }
-            }
+            totalNegTweets++;
         }
-        if(sent==4){ //positive words
-            //std::cout<<"Sentiment: "<<sent<<" Tweet: "<<tweet<<"\n";
+        if(sent==4){
             posWordCount += size;
-            pos1++;
-            for(int i=0; i<size;i++){
-                auto posIT = positiveWords.find(words[i]);
-                if ( posIT != positiveWords.end() ) { //word is found
-                    posIT->second++;
-                } else { //word is not found
-                    positiveWords.insert(std::pair(words[i],1));
+            totalPosTweets++;
+        }
+        for(int i=0; i<size;i++){
+            if(words[i].getLength() > 1){ //this gets rid of all DSStrings that are only one character
+                if(sent==0){ //negative words
+                    //std::cout<<"Sentiment: "<<sent<<" Tweet: "<<tweet<<"\n";
+
+                        auto negIT = negativeWords.find(words[i]); //looks for the word
+                        if ( negIT != negativeWords.end() ) { //word is found
+                            negIT->second++; // will this work correctly?
+                        } else { //word is not found
+                            negativeWords.insert(std::pair(words[i],1));
+                        }
+                }
+                if(sent==4){ //positive words
+                    //std::cout<<"Sentiment: "<<sent<<" Tweet: "<<tweet<<"\n";
+
+                    auto posIT = positiveWords.find(words[i]);
+                        if ( posIT != positiveWords.end() ) { //word is found
+                            posIT->second++;
+                        } else { //word is not found
+                            positiveWords.insert(std::pair(words[i],1));
+                        }
                 }
             }
         }
+        //positiveWords = &posW;
     }
 }
 
@@ -67,10 +86,87 @@ void wordCounter::modifyWordLists(std::map<DSString, int> & positive, std::map<D
 
 }
 
-void wordCounter::determineSentiment(std::vector<std::pair<int, DSString>> & tweets) {
-    for( auto it = begin(tweets); it != end (tweets); ++it ){
+void wordCounter::determineWordWeights(std::map<DSString, int> & pos, std::map<DSString, int> & neg) {
 
+    for (auto it = begin (pos); it != end (pos); ++it) { //goes through every word in positive word list
+        DSString key = it->first;
+        float wordWeight;
+
+        auto negIT = neg.find(key);
+        if ( negIT != neg.end() ) { // sees if word occurs in both lists
+
+            float posWeight = (totalPosTweets * it->second)/(posWordCount/10); // the weight rounded to 2 decimals
+            float negWeight = (totalNegTweets * negIT->second)/(negWordCount/10);
+            wordWeight = posWeight - negWeight;
+
+            wordWeights.insert(std::pair(key,wordWeight));
+
+        } else { //word is not found
+            wordWeight = (totalPosTweets * it->second)/(posWordCount/10);
+            wordWeights.insert(std::pair(key,wordWeight));
+        }
+
+    }
+    for (auto it = begin (neg); it != end (neg); ++it) {
+        DSString key = it->first;
+        float wordWeight;
+
+        auto wIT = wordWeights.find(key); //checks to see if word has already been weighed or not
+        if ( wIT != wordWeights.end() ) { // word does occur in both lists. Checking this first cause faster if true
+            // nothing happens
+        } else { //word is not found
+            wordWeight = 0.0 - (totalNegTweets * it->second)/(negWordCount /10); // 0- to make weight neg
+            wordWeights.insert(std::pair(key,wordWeight));
+        }
     }
 
 }
+
+void wordCounter::determineSentiment(std::map<DSString, DSString>& tweets){ // takes proccessed test tweets
+
+    for( auto it = begin(tweets); it != end (tweets); ++it ){
+        int size = 0;
+        float weight = 0.0;
+        DSString tweet = it ->second;
+        DSString* words = tweet.getWords(size);
+
+        for(int i = 0; i<size;i++){
+            DSString key = words[i];
+            auto wIT = wordWeights.find(key); //finds word in pre-built map
+
+            if ( wIT != wordWeights.end() ) {  //locates the word and its weight
+                weight += wIT->second;
+            } else { //can I just remove this?
+            }
+        }
+        if(weight>=0.0){
+            classifiedTweets.insert(std::pair(it->first,4));
+        } else classifiedTweets.insert(std::pair(it->first,0));
+
+    }
+}
+
+void wordCounter::testItAll(std::map<DSString, int> & myData, std::map<DSString, int> & actualData, int& totalTested) {
+    int correct = 0;
+    for( auto it = begin(myData); it != end (myData); ++it ){ //could probably store both arguments as vector then compare index to save time if needed
+
+        DSString key = it->first;
+
+        auto testIT = actualData.find(key);
+        if ( testIT != actualData.end() ) {
+            if(it->second == testIT->second){ // I somehow get the right prediction
+                correct++;
+            } else incorrectTweetIDs.emplace_back(it->first);
+        } else { //can I just remove this?
+        }
+    }
+    float accuracy = correct / totalTested; // I feel like getting the total tweets this way will not return correct value
+    std::cout<< accuracy<<std::endl;
+}
+
+
+
+
+
+//can convert DSString to a normal one if using a stemming library.
 

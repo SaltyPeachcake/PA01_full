@@ -19,17 +19,20 @@ void fileReader::readTestSentiment(const char * inputFileName){ //I am just goin
     if(inFile.is_open()) inFile.getline(line, 20); //clears first line of col names
     if ( inFile.is_open() ) {
         int tCount =0;
-        while ( inFile && (tCount<=5)){
+        while ( inFile ){
             inFile.getline(line,20);
             sent = line[0]-'0';
-            sentVal.push_back(sent);
-            //std::cout << "Sent: " << sent << "\n";
+            DSString theLine(line);
+            DSString ID = theLine.substring(2,10);
+            testSent.insert(std::pair(ID,sent));
             tCount++;
         }
     }
 }
 
 void fileReader::readTestTweets(const char* inputFileName){
+
+    totalTestTweets = 0; //sets baseline
 
     std::ifstream inFile;
     inFile.open(inputFileName,std::ios::in); // do I need the ios::in?
@@ -39,8 +42,7 @@ void fileReader::readTestTweets(const char* inputFileName){
     if(inFile.is_open()) inFile.getline(line, 600); //clears first line of col names
     if ( inFile.is_open() ) {
         int tCount =0;
-        //should define tweet make constructor here?
-        while ( inFile && (tCount<=5)){
+        while ( inFile ){
             row.clear();
             inFile.getline(line,600);
 
@@ -51,9 +53,7 @@ void fileReader::readTestTweets(const char* inputFileName){
             for(char c: line){
                 if(c == ','){
                     commas++;
-                    //DSString col = wholeLine.substring(mark, (i-1)-mark);
                     mark = i+1;
-
 
                     if(commas == 1 ){
                         DSString col = wholeLine.substring(0, 10);
@@ -68,15 +68,13 @@ void fileReader::readTestTweets(const char* inputFileName){
                 }
                 i++;
             }
-            long n = row[0].toInt();
-            //inserting the values to the map produces errors
-            tweetMap.insert(std::pair(n, std::pair(row[1],sentVal[tCount]))); //creates a new key value pair, sets sentiment to 2 until other file is read
+
+            //testTweets.insert(std::pair(row[0], row[1])); //creates a new key value pair
+            testTweetsProcessed.insert(std::pair(row[0], row[1].processString())); //creates another map where the tweet is pre-processed for analysis
+            totalTestTweets++;
             //std::cout << "ID: " << n << " Tweet: " << row[1] << " Senti: " <<sentVal[tCount] << "\n";
             tCount++;
-
-
         }
-        sentVal.clear();
         inFile.close();
     }
 }
@@ -93,7 +91,7 @@ void fileReader::readTrainingData(const char * inputFileName) {
     if ( inFile.is_open() ) {
         int tCount =0;
         //should define tweet make constructor here?
-        while ( inFile && (tCount<=200)){
+        while ( inFile ){
             row.clear();
             inFile.getline(line,600);
 
@@ -106,11 +104,8 @@ void fileReader::readTrainingData(const char * inputFileName) {
                     commas++;
                     mark = i+1;
 
-
                     if(commas == 1 ){
                         sent = wholeLine[0]-'0';
-                        //DSString col = wholeLine[0];
-                        //row.push_back(col);
                     }
                     if(commas==5){ //this is the tweet itself it will just read the whole thing
                         DSString col = wholeLine.substring(mark, wholeLine.getLength()-(mark-1));
@@ -123,13 +118,12 @@ void fileReader::readTrainingData(const char * inputFileName) {
             }
             //int n = row[0][0] - '0';
             //inserting the values to the map produces errors
-            trainingTweetsVec.emplace_back(sent, row[0]);
+            trainingTweetsVec.emplace_back(sent, row[0].processString());
             //std::cout << "Sent: " << sent << " Tweet: " << row[0] << "\n";
             tCount++;
 
 
         }
-        sentVal.clear();
         inFile.close();
     }
 }

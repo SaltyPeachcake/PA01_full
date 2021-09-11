@@ -13,10 +13,12 @@
 class fileReader {
 
 public:
-    std::map<long, std::pair<DSString, int>> tweetMap; // map of ID and pair of tweet with sentiment
-    std::map<int, DSString> trainingTweets;
-    std::vector<int> sentVal;
+    //std::map<DSString, DSString> testTweets; // map of test ID and tweet
+    std::map<DSString, DSString> testTweetsProcessed; //same as above but processed  ie: all lower case, no grammar, etc
+    std::map<DSString, int> testSent;
     std::vector<std::pair<int, DSString>> trainingTweetsVec;
+    int totalTestTweets ;
+
 
     // I have not actually read the initial map after creation, perhaps that will help debug?
 

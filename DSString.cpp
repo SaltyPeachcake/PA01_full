@@ -5,7 +5,9 @@
 
 #include "DSString.h"
 #include <cstring>
-#include <stdlib.h>
+#include <cstdlib>
+#include <list>
+#include <cctype>
 
 /**
  * The constructors
@@ -239,3 +241,85 @@ DSString* DSString::getWords(int& s) { //improve efficiency by making the index 
     }
     return words;
 }
+
+DSString& DSString::processString() {
+    this->toLower();
+    this->deletePunctuation();
+
+    return *this;
+}
+
+DSString& DSString::deleteGrammar() {
+
+    int mark =0;
+    std::list<DSString> words;
+    std::cout<<*this<<"\n";
+
+    for(int i = 0; i < this->getLength(); i++){
+        char cur = customString[i];
+        if(cur==','||cur=='.'||cur=='!'||cur=='?'||cur=='\"'||cur=='('||cur==')'){
+            if(mark>0 && i-mark==0){ //prevents taking a substring of 0 chars
+                mark++;
+            } else{
+                DSString word (this->substring(mark, i-mark));
+                mark = i+1;
+                words.emplace_back(word);
+            }
+        }
+        if(i == this->getLength()-1){ //last character in the string, doesnt miss word and prevents deleting tweets with no grammar
+            DSString word (this->substring(mark, i-mark));
+            words.emplace_back(word);
+        }
+    }
+    DSString newSentence;
+    for(DSString word:words){
+        newSentence+=word;
+        std::cout<<"In Progress: "<<word<<"\n";
+    }
+    delete[] customString;
+    customString = newSentence.c_str();
+    std::cout<<"final: "<<*this<<"\n";
+    return *this;
+}
+//(cur >= 'A' && cur <= 'Z') || (cur >= 'a' && cur <= 'z') || (cur >= '0' && cur <= '9') || cur==' '
+/**
+ * This function took two tries and over 3 hours of work to get functioning
+ * It halted progress on other function since words with punctuations counted as so many different things
+ * I am going to die
+ */
+
+DSString& DSString::deletePunctuation() {
+    //char* newSentence = new char[this->getLength()+1];
+    int newSize = this->getLength()+1;
+    int pos = 0;
+    for(int i=0; i<this->getLength();i++){
+        char cur = customString[i];
+        if(!std::ispunct(cur)){ //if anything not accepted
+            customString[pos] = customString[i];
+            //newSentence[pos] = cur;
+            pos++;
+        } else{
+            //pos=i;
+            newSize--;
+        }
+    }
+//    char* temp = new char[newSize]; //none of this worked. I don't know why but it didn't
+//    std::strncpy(temp, newSentence, newSize);
+//    delete[] customString;
+//    customString = temp;
+    if(customString[newSize-1] != '\0'){ //makes sure it ends in null char
+        customString[newSize-1] = '\0';
+    }
+    return *this;
+}
+
+DSString &DSString::toLower() {
+    char* temp = new char[this->getLength()+1];
+    std::strcpy(temp, customString);
+    for(int i = 0; i < this->getLength();i++){
+       customString[i] = tolower(customString[i]);
+    }
+    return *this;
+}
+
+

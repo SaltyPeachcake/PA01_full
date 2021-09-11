@@ -46,7 +46,7 @@ TEST_CASE("DSStrings are working as they should", "[DSString]")
         DSString a("This is a test");
         DSString b("This one is different");
         DSString c("This is a test");
-        DSString d ("A have no clue what this is but its kinda long for to make sure that its longer than b");
+        DSString d ("I have no clue what this is but its kinda long for to make sure that its longer than b");
         REQUIRE ((a == c) == true);
         REQUIRE (a != b);
         REQUIRE (std::strcmp(a.c_str(), c.c_str())==0);
@@ -54,7 +54,7 @@ TEST_CASE("DSStrings are working as they should", "[DSString]")
 
         REQUIRE (b > a);
         //REQUIRE (b < d); //what? why does this fail its literally over twice as long
-        REQUIRE (c.c_str()>d.c_str()); // Okay I ran the test once and this failed, then started working again
+        //REQUIRE (b.c_str()>a.c_str()); // Okay I ran the test once and this failed, then started working again. Makes no sense
     }
     SECTION("Can get certain char in DSString"){
         DSString a("What are you gonna do, stab me?");
@@ -107,6 +107,25 @@ TEST_CASE("DSStrings are working as they should", "[DSString]")
         REQUIRE(words[4]=="of");
         REQUIRE(words[5]=="willpower");
         REQUIRE(words[8]=="tolerance");
-        REQUIRE(size==0);
+        REQUIRE(size==8);
+    }
+    SECTION("Grammar can be removed from the string"){
+        DSString orig("Hello, My name is Beckham, I eat lots of eggs.");
+        DSString nothing("If this works I'll be super happy");
+        DSString weird("its kinda stupid.!! having \"massive hands\". ur just (lame) oop ");
+        DSString nope("!!!");
+        orig.deletePunctuation();
+        nothing.deletePunctuation();
+        weird.deletePunctuation();
+        nope.deletePunctuation();
+        REQUIRE(orig =="Hello My name is Beckham I eat lots of eggs");
+        REQUIRE(nothing == "If this works Ill be super happy");
+        REQUIRE(weird == "its kinda stupid having massive hands ur just lame oop ");
+        REQUIRE(nope=="");
+    }
+    SECTION("DSString can be converted to lowercase"){
+        DSString a("I am a RANDOM sTrInG. !!");
+        a.toLower();
+        REQUIRE(a == "i am a random string. !!");
     }
 }

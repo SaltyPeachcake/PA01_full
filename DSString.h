@@ -141,7 +141,13 @@ public:
 
    DSString* getWords(int& ); //I believe this is returning a container for all the words in the string.
 
+   DSString& processString();
 
+   DSString& deleteGrammar();
+
+   DSString& deletePunctuation();
+
+   DSString& toLower();
 
 };
 
