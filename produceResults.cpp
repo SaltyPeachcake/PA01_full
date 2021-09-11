@@ -6,7 +6,8 @@
 #include<map>
 #include "DSString.h"
 #include<fstream>
-#include<vector>
+#include<math.h>
+
 /**
  * iterates through map to find each actual sentiment, then compares to see if correct or not
  */
