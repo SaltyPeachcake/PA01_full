@@ -85,36 +85,57 @@ void wordCounter::determineWordWeights(std::map<DSString, int> & pos, std::map<D
 
     for (auto it = begin (pos); it != end (pos); ++it) { //goes through every word in positive word list
         DSString key = it->first;
-        float wordWeight;
+        float wordW;
 
         auto negIT = neg.find(key);
         if ( negIT != neg.end() ) { // sees if word occurs in both lists
 
-            float posWeight = round((float(totalPosTweets) * float(it->second))/(float(posWordCount)/10)); // the weight rounded to 2 decimals
-            float negWeight = round((float(totalNegTweets) * float(negIT->second))/(float(negWordCount)/10));
-            wordWeight = posWeight - negWeight;
+            float posWeight = wordWeight(it->second, 4);
+            float negWeight = wordWeight(negIT->second, 0);
+            wordW = posWeight - negWeight;
 
-            wordWeights.insert(std::pair(key,wordWeight));
+            wordWeights.insert(std::pair(key,wordW));
 
         } else { //word is not found
-            wordWeight = round((float(totalPosTweets) * float(it->second))/(float(posWordCount)/10));
-            wordWeights.insert(std::pair(key,wordWeight));
+            wordW = wordWeight(it->second, 4);;
+            wordWeights.insert(std::pair(key,wordW));
         }
 
     }
     for (auto it = begin (neg); it != end (neg); ++it) {
         DSString key = it->first;
-        float wordWeight;
+        float wordW;
 
         auto wIT = wordWeights.find(key); //checks to see if word has already been weighed or not
         if ( wIT != wordWeights.end() ) { // word does occur in both lists. Checking this first cause faster if true
             // nothing happens
         } else { //word is not found
-            wordWeight = 0.0 - round((float(totalNegTweets) * float(it->second))/(float(negWordCount) /10.0)); // 0- to make weight neg
-            wordWeights.insert(std::pair(key,wordWeight));
+            wordW = 0.0 -  wordWeight(it->second, 0);
+            wordWeights.insert(std::pair(key,wordW));
         }
     }
     //delete positiveWords;
+}
+
+/**
+ * equation takes total tweets^2 * word freq / total word count
+ * tweets is ^2 to average wordcount
+ *
+ * Also messing with it it may change
+ */
+float wordCounter::wordWeight(int& frequency, int sent) {
+    float weight;
+    if(sent==0){
+        weight = round(( float(frequency))/(float(negWordCount)/(float(totalNegTweets))));
+        return weight;
+    }
+    else if( sent ==4){
+        weight = round(( float(frequency))/(float(posWordCount)/(float(totalPosTweets))));
+        return weight;
+    }else if( sent==2){
+        weight = round(((float(totalNegTweets^2) * float(frequency)))/(float(negWordCount)));
+        return weight;
+    }
 }
 
 void wordCounter::determineSentiment(std::map<DSString, DSString>& tweets){ // takes proccessed test tweets
@@ -147,6 +168,8 @@ float wordCounter::round(float var){
     float value = (int)(var * 100 + .5);
     return (float)value / 100;
 }
+
+
 
 
 

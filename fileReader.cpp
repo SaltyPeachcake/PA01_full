@@ -19,7 +19,7 @@ void fileReader::readTestSentiment(const char * inputFileName){ //I am just goin
     //if(inFile.is_open()) inFile.getline(line, 20); //clears first line of col names
     if ( inFile.is_open() ) {
         int tCount =0;
-        while ( inFile && tCount<=10000 ){  //I dont know how else to read file without hard coding how many lines are needed. Every other method produced bad_alloc
+        while ( inFile && tCount<=testCount ){  //I dont know how else to read file without hard coding how many lines are needed. Every other method produced bad_alloc
             inFile.getline(line,20);
             if(tCount==0){tCount++; } else{ //skips line I hope
                 sent = line[0]-'0';
@@ -44,7 +44,7 @@ void fileReader::readTestTweets(const char* inputFileName){
     //if(inFile.is_open()) inFile.getline(line, 600); //clears first line of col names
     if ( !inFile.eof() ) {
         int tCount =0;
-        while ( inFile && tCount<=10000 ){ // Change this number to whatever the test dataset size is
+        while ( inFile && tCount<=testCount ){ // Change this number to whatever the test dataset size is
             row.clear();
             inFile.getline(line,600);
             if(tCount==0){tCount++;  } else{ //skips line
@@ -94,7 +94,7 @@ void fileReader::readTrainingData(const char * inputFileName) {
     if ( inFile.is_open() ) {
         int tCount =0;
         //should define tweet make constructor here?
-        while ( inFile && tCount<=20000 ){
+        while ( inFile && tCount<=trainingCount ){
             row.clear();
             inFile.getline(line,600);
             if(tCount==0){tCount++;

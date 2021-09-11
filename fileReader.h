@@ -13,7 +13,9 @@
 class fileReader {
 
 public:
-    //std::map<DSString, DSString> testTweets; // map of test ID and tweet
+    const int testCount = 10000; //change these to however many lines are in .csv
+    const int trainingCount = 20000;
+
     std::map<DSString, DSString> testTweetsProcessed; //same as above but processed  ie: all lower case, no grammar, etc
     std::map<DSString, int> testSent;
     std::vector<std::pair<int, DSString>> trainingTweetsVec;

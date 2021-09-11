@@ -49,6 +49,12 @@ public:
     void determineWordWeights(std::map<DSString, int>&,std::map<DSString, int>& );
 
     /**
+     * equation that evaluates weight
+     * @return the weight of the word
+     */
+    float wordWeight(int&, int );
+
+    /**
      * Goes through each word in the Tweet and gets weight of it. Adds/subtracts from starting point of 0.
      * the weight being +/- at the end corresponds to sentiment assigned to it.
      */
