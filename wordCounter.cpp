@@ -81,11 +81,6 @@ void wordCounter::countWords2(std::vector<std::pair<int, DSString>>& tweets) {
 }
 
 
-
-void wordCounter::modifyWordLists(std::map<DSString, int> & positive, std::map<DSString, int>& negative){
-
-}
-
 void wordCounter::determineWordWeights(std::map<DSString, int> & pos, std::map<DSString, int> & neg) {
 
     for (auto it = begin (pos); it != end (pos); ++it) { //goes through every word in positive word list

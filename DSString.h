@@ -134,19 +134,40 @@ public:
 
    // DSString find(DSString str); //will find string within a string
 
+   /**
+    * Is unused but want to implement to function similar to how getline() with a string would
+    */
    std::istream & getLine (std::istream &ist, DSString &str, //got this from stack overflow
                                   char delim = '\n');
 
+   /**
+    * originally converted to int but ran into maxIntValue so converted to long instead. Not even using function anymore
+    */
    long toInt();
 
+   /**
+    * Gets each word within a sentence. Words are found via # of spaces+1
+    */
    DSString* getWords(int& ); //I believe this is returning a container for all the words in the string.
 
+   /**
+    * Normalizes string by calling deletePunctuation() and toLower()
+    */
    DSString& processString();
 
+   /**
+    * Old punctuation handler. Did not work after much fiddling. Just ignored it until I could no longer
+    */
    DSString& deleteGrammar();
 
+   /**
+    * Punctuation handler. Took hours and was infuriating. Just ignored it until I needed to fix it
+    */
    DSString& deletePunctuation();
 
+   /**
+    * I think you can figure out what this ine does
+    */
    DSString& toLower();
 
 };

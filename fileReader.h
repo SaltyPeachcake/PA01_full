@@ -21,11 +21,19 @@ public:
 
 
     // I have not actually read the initial map after creation, perhaps that will help debug?
-
+    /**
+     * Reads all the tweets into a map of ID and DSString
+     */
     void readTestTweets(const char*); // have to re do this to do only tweets lol
 
+    /**
+     * Reads all the IDs into a map of ID and sentiment
+     */
     void readTestSentiment(const char*);
 
+    /**
+     * Reads all tweets into vector of sentiment and DSString.
+     */
     void readTrainingData(const char*);
 
 };

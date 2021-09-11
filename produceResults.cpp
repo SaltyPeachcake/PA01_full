@@ -7,7 +7,9 @@
 #include "DSString.h"
 #include<fstream>
 #include<vector>
-
+/**
+ * iterates through map to find each actual sentiment, then compares to see if correct or not
+ */
 void produceResults::testItAll(std::map<DSString, int> & myData, std::map<DSString, int> & actualData, int& totalTested, const char* file) {
     int correct = 0;
 
